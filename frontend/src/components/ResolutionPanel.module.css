@@ -1,0 +1,107 @@
+.wrapper {
+  display: grid;
+  gap: 14px;
+}
+
+.empty {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.pythonCard {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.statusOk,
+.statusBad {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.statusOk {
+  background: #eafaf1;
+  color: var(--color-success);
+}
+
+.statusBad {
+  background: #fdecec;
+  color: var(--color-danger);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eef2f6;
+}
+
+.changed {
+  background: #eafaf1;
+}
+
+.packageCell {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copyRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.copyBtn {
+  justify-self: start;
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.copyBtnSecondary {
+  border: 1px solid #c8d4e1;
+  background: white;
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.copyBtn:disabled,
+.copyBtnSecondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

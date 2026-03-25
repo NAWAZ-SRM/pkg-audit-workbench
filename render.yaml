@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: vulnerability-timeline-backend
+    runtime: python
+    rootDir: backend
+    pythonVersion: "3.11"
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: NVD_API_KEY
+        sync: false
+      - key: OSV_BATCH_SIZE
+        value: "100"
+      - key: PYPI_CONCURRENCY_LIMIT
+        value: "20"
+      - key: NVD_RATE_LIMIT
+        value: "5"
+      - key: RESOLVER_MAX_ITERATIONS
+        value: "10"
+      - key: ALLOWED_ORIGINS
+        value: "*"

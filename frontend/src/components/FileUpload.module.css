@@ -1,0 +1,75 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  width: min(760px, 100%);
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.dropzone {
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--radius);
+  padding: 30px;
+  text-align: center;
+  background: #f1f8fe;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+}
+
+.buttonRow {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.btnSecondary {
+  border: 1px solid #d8e2ea;
+  background: white;
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.fileInfo {
+  margin-top: 14px;
+  font-size: 0.92rem;
+}
+
+.error {
+  margin-top: 14px;
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.sampleLabel {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}

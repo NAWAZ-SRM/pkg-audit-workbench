@@ -1,0 +1,120 @@
+:global(:root) {
+  --color-primary: #2E86C1;
+  --color-danger: #e74c3c;
+  --color-warning: #f39c12;
+  --color-success: #27ae60;
+  --color-bg: #f8f9fa;
+  --color-card: #ffffff;
+  --color-text: #2c3e50;
+  --color-muted: #7f8c8d;
+  --radius: 8px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+:global(*) {
+  box-sizing: border-box;
+}
+
+:global(html),
+:global(body),
+:global(#root) {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+:global(body) {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.app {
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.topbar {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.topTitle {
+  font-weight: 700;
+}
+
+.topButton {
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.tabs {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab,
+.activeTab {
+  border: 1px solid #d7dfe7;
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  cursor: pointer;
+  background: white;
+}
+
+.activeTab {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.content {
+  margin-top: 14px;
+}
+
+.errorWrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.errorCard {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--color-danger);
+  padding: 16px;
+  width: min(640px, 100%);
+}
+
+.retry {
+  margin-top: 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

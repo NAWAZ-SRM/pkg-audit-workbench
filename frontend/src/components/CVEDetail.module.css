@@ -1,0 +1,85 @@
+.drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min(420px, 92vw);
+  background: #fff;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+  padding: 16px;
+  display: grid;
+  grid-auto-rows: min-content;
+  gap: 14px;
+  overflow-y: auto;
+  animation: slideIn 180ms ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.subTitle {
+  color: var(--color-muted);
+  margin-top: 4px;
+  font-size: 0.88rem;
+}
+
+.closeBtn {
+  border: none;
+  background: #f2f5f8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  height: fit-content;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.label {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+
+.value {
+  font-weight: 600;
+}
+
+.block {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.text {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+}
