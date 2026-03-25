@@ -10,12 +10,6 @@ Unlike flat CVE list tools, this project focuses on both **timeline context** an
 
 ---
 
-## Live Demo
-
-`[Add deployed URL here]`
-
----
-
 ## Core Features
 
 - **Interactive D3 timeline** of CVE disclosure and patch events per package.
