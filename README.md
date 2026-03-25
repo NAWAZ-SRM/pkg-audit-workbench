@@ -1,59 +1,246 @@
 # Dependency Vulnerability Timeline
 
-Dependency Vulnerability Timeline is a full-stack tool that analyzes a `requirements.txt` or `package.json`, then explains risk in time context and recommends a safer dependency set. Unlike Snyk-style flat CVE listings, this project combines an interactive timeline view with conflict-aware version resolution so you can see **when** risk appeared and **what exact versions** to move to.
+Dependency Vulnerability Timeline is a full-stack security analysis tool that accepts a `requirements.txt` or `package.json`, then returns:
+
+- a **time-based vulnerability view** (when issues were disclosed and patched),
+- a **conflict analysis** (dependency and Python compatibility clashes), and
+- a **best-effort version resolution plan** for safer upgrades.
+
+Unlike flat CVE list tools, this project focuses on both **timeline context** and **resolution strategy**.
+
+---
 
 ## Live Demo
-[link — fill this after deploy]
 
-## What It Does
-- Renders an interactive D3 timeline of CVE disclosure and patch events per package.
-- Detects dependency version conflicts and Python compatibility conflicts.
-- Produces a best-effort global resolution with recommended package versions and Python version.
+`[Add deployed URL here]`
+
+---
+
+## Core Features
+
+- **Interactive D3 timeline** of CVE disclosure and patch events per package.
+- **Conflict detection** for:
+  - inter-package version constraints,
+  - Python compatibility mismatches.
+- **Fixpoint-style resolver** that recommends safer package versions and a Python version target.
+- **Multi-source enrichment** using OSV, NVD, PyPI, and npm metadata.
+- **Sample files and copy helpers** in UI for fast demos.
+
+---
 
 ## Tech Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| Frontend | React + Vite | Main UI, file upload, results display |
-| Visualisation | D3.js | Horizontal timeline SVG rendering |
-| Backend | FastAPI (Python) | Orchestrates all API calls and resolver logic |
-| Dep parsing | pip-requirements-parser | Parse requirements.txt cleanly |
-| Version logic | packaging (Python) | SpecifierSet, Version comparison |
-| Vulnerability data | OSV API (Google) | Free, no key, authoritative CVE source |
-| Severity data | NVD API (NIST) | CVSS scores and descriptions |
-| Package metadata | PyPI JSON API | python_requires, dependency constraints |
-| Package metadata | npm Registry API | engines.node, peer deps, dep constraints |
-| HTTP client | httpx + asyncio | Async concurrent API calls |
-| Deployment | Render / Railway | Simple free-tier hosting for demo |
+| Frontend | React + Vite | Upload flow, state-driven UI, result panels |
+| Visualization | D3.js | Timeline rendering, filters, interaction |
+| Backend | FastAPI | Analysis orchestration and API contract |
+| Parsing | pip-requirements-parser + JSON parser | Dependency extraction |
+| Version logic | packaging | Version/specifier comparison |
+| Vulnerability data | OSV API | Primary vulnerability dataset |
+| Severity enrichment | NVD API | CVSS score + severity enrichment |
+| Registry metadata | PyPI JSON + npm Registry | Constraint + version metadata |
+| HTTP | httpx + asyncio | Concurrent upstream calls |
+| Deploy | Render (backend) + Vercel (frontend) | Production hosting |
 
-## Running Locally
-1. Clone the repository:
-   - `git clone <your-repo-url>`
-   - `cd vulnerablity_timeline`
-2. Backend setup:
-   - `python3 -m venv .venv`
-   - `source .venv/bin/activate`
-   - `pip install --upgrade pip`
-   - `pip install -r backend/requirements.txt`
-   - `cp frontend/.env.example frontend/.env`
-   - Set `VITE_API_BASE_URL=http://127.0.0.1:8000` in `frontend/.env`
-   - Start API from repo root: `python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000`
-   - Alternate start from `backend/`: `uvicorn main:app --reload --host 127.0.0.1 --port 8000`
-3. Frontend setup (new terminal):
-   - `cd frontend && npm install && npm run dev`
+---
 
-## How the Resolver Works
-The resolver starts from what you currently have installed and treats that as the initial working set. It then identifies packages connected to known vulnerabilities or conflicts and gathers candidate versions from package registries. Instead of applying random upgrades, it filters candidates through compatibility checks first.
+## System Architecture (High Level)
 
-For each package, candidate versions are screened against Python constraints and cross-package dependency constraints. If a clean (CVE-free) version exists, the resolver chooses the highest compatible one. If no clean version exists, it picks the lowest-risk compatible option so the system still returns actionable guidance instead of failing hard.
+1. Parse uploaded dependency file (`requirements.txt` / `package.json`).
+2. Fetch vulnerability + metadata in parallel (OSV, PyPI/npm, NVD enrichment).
+3. Detect conflicts (version + Python compatibility).
+4. Run resolver to compute an improved dependency set.
+5. Return structured response for Timeline / Conflicts / Resolution panels.
 
-After each pass, conflict detection runs again. If changes introduce new conflicts, another iteration runs until the graph stabilizes (fixpoint) or the configured iteration cap is reached. This makes the output practical for real dependency sets while keeping behavior deterministic and explainable in interviews.
+Backend endpoint surface:
 
-## Known Limitations
-- **Transitive dependencies are NOT resolved** — only direct deps in the uploaded file are analysed. Full transitive resolution would require pip's dependency resolver internals.
-- **npm peer dependency conflicts are detected but resolution is best-effort** — npm's peer dep logic is significantly more complex than PyPI's.
-- **OSV does not always have `patched_at` dates** — when missing, this field is left as `None`.
-- **NVD CVSS scores are for the CVE globally, not version-specific** — a package might have a patched version that still shows a high CVSS score.
-- **The frontend does not support files larger than 500KB** — this is a UI limit, the backend handles any size.
-- **Private registries (Artifactory, Nexus) are not supported** — only public PyPI and npm.
-# pkg-audit-workbench
+- `POST /analyse`
+- `GET /health`
+
+---
+
+## Repository Structure
+
+```text
+backend/
+  main.py
+  api/
+  parser/
+  resolver/
+  models/
+  utils/
+
+frontend/
+  src/
+    components/
+    hooks/
+    utils/
+  public/samples/
+```
+
+---
+
+## Quick Start (Local)
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js 18+
+- npm
+
+### 1) Clone
+
+```bash
+git clone <your-repo-url>
+cd vulnerablity_timeline
+```
+
+### 2) Start backend
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r backend/requirements.txt
+
+# Recommended (run from repo root)
+python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Alternative (if you run command from `backend/`):
+
+```bash
+cd backend
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### 3) Start frontend (new terminal)
+
+```bash
+cd frontend
+npm install
+cp .env.example .env
+```
+
+Set this in `frontend/.env`:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+Then run:
+
+```bash
+npm run dev
+```
+
+Open: `http://localhost:5173`
+
+---
+
+## API Contract (Current)
+
+### `POST /analyse`
+
+Accepts multipart form data:
+
+- field name: `file`
+- supported filenames: `requirements.txt`, `.txt`, `.json`
+
+Returns structured analysis JSON containing:
+
+- ecosystem
+- package vulnerability reports
+- conflicts
+- resolution plan
+- analysed timestamp
+
+### `GET /health`
+
+Returns:
+
+```json
+{ "status": "ok" }
+```
+
+---
+
+## Environment Variables
+
+### Backend
+
+| Variable | Purpose | Default |
+|---|---|---|
+| `NVD_API_KEY` | NVD CVSS enrichment key | unset |
+| `OSV_BATCH_SIZE` | OSV batch size | `100` |
+| `PYPI_CONCURRENCY_LIMIT` | PyPI request concurrency cap | `20` |
+| `NVD_RATE_LIMIT` | NVD requests/sec throttle | `5` |
+| `RESOLVER_MAX_ITERATIONS` | Fixpoint iteration cap | `10` |
+| `ALLOWED_ORIGINS` | CORS allow list (comma-separated) | `*` |
+
+### Frontend
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_BASE_URL` | Backend base URL (e.g., `http://127.0.0.1:8000`) |
+
+---
+
+## Deployment
+
+- Backend deployment config: `render.yaml`
+- Frontend deployment config: `frontend/vercel.json`
+
+Typical setup:
+
+- Deploy backend on Render.
+- Set frontend `VITE_API_BASE_URL` to deployed backend URL.
+- Deploy frontend on Vercel.
+
+---
+
+## Troubleshooting
+
+### “Analysis failed” with generic request error
+
+Check first:
+
+1. Backend is reachable: `curl http://127.0.0.1:8000/health`
+2. `frontend/.env` has a valid URL format (must include `http://` or `https://`)
+3. Frontend dev server restarted after env changes
+
+### Common local mistake
+
+Incorrect:
+
+```env
+VITE_API_BASE_URL=http:127.0.0.1:8000
+```
+
+Correct:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+---
+
+## Known Limitations (V1)
+
+- Transitive dependency resolution is out of scope (direct deps only).
+- npm peer dependency resolution is best-effort.
+- Some OSV records may not provide `patched_at`.
+- NVD severity is CVE-level, not package-version-specific.
+- Frontend upload UI limits files to 500KB.
+- Private registries (Artifactory/Nexus) are not integrated.
+
+---
+
+## Project Context
+
+This implementation follows the PRD in:
+
+- `vulnerability_timeline.prd.md`
+
+Use that document as the source of truth for architecture, contracts, edge cases, and scope.
